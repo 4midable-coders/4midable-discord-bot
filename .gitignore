@@ -6,6 +6,7 @@ target/
 ### custom ###
 config.properties
 .idea/
+credentials.json
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

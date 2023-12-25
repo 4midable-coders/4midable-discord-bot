@@ -2,11 +2,16 @@ package com.fourMidableCoders.fourMidableDiscordBot;
 
 
 import com.fourMidableCoders.fourMidableDiscordBot.listeners.eventListener;
+import com.fourMidableCoders.fourMidableDiscordBot.slashCommands.commandManager;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManager;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 import java.util.Properties;
@@ -21,21 +26,31 @@ public class fourMidableDiscordBot {
 
     //The constructor of the class.
     public fourMidableDiscordBot() throws LoginException {
-        Properties prop = ConfigLoader.loadProperties(); //Loads the properties of the config.properties file.
-        String token = prop.getProperty("DISCORD_BOT_TOKEN"); //The token of the bot.
+        //Load the config.properties file as prop object.
+        Properties prop = ConfigLoader.loadProperties();
+        //Get the token from the prop object.
+        String token = prop.getProperty("DISCORD_BOT_TOKEN");
+        //create the shardManager object with the provided bot token.
         DefaultShardManagerBuilder builder = DefaultShardManagerBuilder.createDefault(token);
-        builder.setStatus(OnlineStatus.ONLINE); //sets the bots status. The status can be changed to Online, Idle, DoNotDisturb and Invisible.
-        builder.setActivity(Activity.customStatus("Thinking about Everyone Codes")); //sets the bots activity. The activity can be changed to playing, streaming, listening and watching.
-        shardManager = builder.build(); //builds the shardManager object.
+        //Set the status and the activity of the bot.
+        builder.setStatus(OnlineStatus.ONLINE);
+        builder.setActivity(Activity.customStatus("Thinking about Everyone Codes"));
+        //Enable the GatewayIntents for the shardManager object.
+        builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_PRESENCES);
+        //Set the MemberCachePolicy to ALL to cache all members of the guilds.
+        builder.setMemberCachePolicy(MemberCachePolicy.ALL);
+        //Set the ChunkingFilter to ALL to cache all members of the guilds.
+        builder.setChunkingFilter(ChunkingFilter.ALL);
+        //Enable the CacheFlags for the shardManager object. This caches all the needed objects for the event listeners.
+        builder.enableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS);
+        //build the shardManager object. (this starts the bot)
+        shardManager = builder.build();
 
         //add custom event listeners to the shardManager object. The event listeners are located in the listeners package. You can add as many event listeners as you want.
-        shardManager.addEventListener(new eventListener());
+        shardManager.addEventListener(new eventListener(), new commandManager());
     }
 
-    //This method returns the ShardManager object.
-    //The shardManager object is used to get the guilds, the users, the channels and the roles of the bot.
-    //The shardManager object is also used to get the event listeners of the bot.
-    //That is why the shardManager object is needed in the Main class.
+    //This is just a getter for the shardManager object. It is used in the eventListener class.
     public ShardManager getShardManager() {
         return shardManager;
     }
@@ -44,9 +59,9 @@ public class fourMidableDiscordBot {
     //The LoginException is thrown if the provided token is invalid.
     public static void main(String[] args) {
         try {
-            fourMidableDiscordBot bot = new fourMidableDiscordBot();
+            new fourMidableDiscordBot();
         } catch (LoginException e) {
-            System.out.println("ERROR: Provided bot token is invalid.");
+            System.out.println("Invalid token provided. Please provide a valid token in the config.properties file.");
         }
     }
 }
