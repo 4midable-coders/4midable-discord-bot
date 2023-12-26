@@ -16,31 +16,62 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import java.io.*;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /* class to demonstrate use of Calendar events list API */
 public class GoogleService {
+
+    public static List<String> getEvents() throws IOException, GeneralSecurityException {
+        // Build a new authorized API client service.
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        Calendar service =
+                new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                        .setApplicationName(APPLICATION_NAME)
+                        .build();
+
+        // List the next 10 events from the primary calendar.
+        DateTime now = new DateTime(System.currentTimeMillis());
+        DateTime timeMax = new DateTime(System.currentTimeMillis() + 604800000);
+        Events events = service.events().list("c_classroomb5302f41@group.calendar.google.com")
+                .setMaxResults(10)
+                .setTimeMin(now)
+                .setTimeMax(timeMax)
+                .setOrderBy("startTime")
+                .setSingleEvents(true)
+                .execute();
+        List<Event> items = events.getItems();
+        List<String> eventList = new ArrayList<String>(List.of());
+        for (Event event : items) {
+            DateTime start = event.getStart().getDateTime();
+            if (start == null) {
+                start = event.getStart().getDate();
+            }
+            eventList.add(event.getSummary() + " (" + start.toString() + ")" + "\n");
+        }
+        return eventList;
+    }
     /**
      * Application name.
      */
-    public static final String APPLICATION_NAME = "Google Calendar API Java Quickstart";
+    private static final String APPLICATION_NAME = "4midable-discord-bot";
     /**
      * Global instance of the JSON factory.
      */
-    public static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     /**
      * Directory to store authorization tokens for this application.
      */
-    public static final String TOKENS_DIRECTORY_PATH = "tokens";
+    private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     /**
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
-    public static final List<String> SCOPES =
+    private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
-    public static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     /**
      * Creates an authorized Credential object.
@@ -49,7 +80,7 @@ public class GoogleService {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
-    public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
+    private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
         // Load client secrets.
         InputStream in = new FileInputStream("/Users/peterliebhart/Desktop/Private Projects/4midable-discord-bot/credentials.json");

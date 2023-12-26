@@ -7,6 +7,7 @@ target/
 config.properties
 .idea/
 credentials.json
+tokens/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
