@@ -2,6 +2,7 @@ package com.fourMidableCoders.fourMidableDiscordBot;
 
 
 import com.fourMidableCoders.fourMidableDiscordBot.listeners.eventListener;
+import com.fourMidableCoders.fourMidableDiscordBot.service.GoogleService;
 import com.fourMidableCoders.fourMidableDiscordBot.slashCommands.commandManager;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -22,7 +23,6 @@ import java.util.Properties;
 public class fourMidableDiscordBot {
 
     private final ShardManager shardManager;
-
 
     //The constructor of the class.
     public fourMidableDiscordBot() throws LoginException {
