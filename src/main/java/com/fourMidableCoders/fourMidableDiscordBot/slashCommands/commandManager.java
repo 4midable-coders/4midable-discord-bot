@@ -20,6 +20,9 @@ import java.util.List;
 //This class handles the slash commands.
 public class commandManager extends ListenerAdapter {
 
+
+    //This method is called when the bot is ready. It adds the slash commands to the server.
+    //Without it, slash command would not work at all, regardless of whether or not they are defined in onSlashCommandInteraction.
     @Override
     public void onGuildReady(GuildReadyEvent event) {
         List<CommandData> commandDataList = new ArrayList<>();
@@ -28,6 +31,8 @@ public class commandManager extends ListenerAdapter {
         event.getGuild().updateCommands().addCommands(commandDataList).queue();
     }
 
+
+    //This method is called when a slash command is used. It checks which command was used and then executes the appropriate code.
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         String command = event.getName();
@@ -35,6 +40,7 @@ public class commandManager extends ListenerAdapter {
         if (command.equals("joke")) {
             String user = event.getUser().getAsMention();
             event.reply("How many " + user + "s do you need to change a lightbulb? Five. One to hold the lightbulb and four to turn the ladder.").queue();
+       //Check if the command is "calendar". If it is, send the upcoming calendar entries using the getEvents method from the GoogleService class.
         } else if (command.equals("calendar")) {
             try {
                 event.reply(GoogleService.getEvents().toString()).queue();

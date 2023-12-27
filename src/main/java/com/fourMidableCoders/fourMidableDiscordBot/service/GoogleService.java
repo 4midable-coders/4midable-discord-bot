@@ -23,6 +23,8 @@ import java.util.List;
 /* class to demonstrate use of Calendar events list API */
 public class GoogleService {
 
+
+    // method to get events from calendar as a list of strings
     public static List<String> getEvents() throws IOException, GeneralSecurityException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
