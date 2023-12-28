@@ -6,9 +6,3 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-
-public class test {
-    public static void main(String[] args) throws GeneralSecurityException, IOException {
-        System.out.println(GoogleService.getEvents());
-    }
-}

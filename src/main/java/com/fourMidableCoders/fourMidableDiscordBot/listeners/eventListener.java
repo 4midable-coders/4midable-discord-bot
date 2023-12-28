@@ -1,5 +1,6 @@
 package com.fourMidableCoders.fourMidableDiscordBot.listeners;
 
+import com.fourMidableCoders.fourMidableDiscordBot.service.GoogleService;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
@@ -24,6 +25,7 @@ public class eventListener extends ListenerAdapter {
         DefaultGuildChannelUnion defaultchan = event.getGuild().getDefaultChannel();
         //.queue() is needed for every action that is done with the JDA API. It queues the action and executes it when the JDA API is ready.
         defaultchan.asTextChannel().sendMessage(message).queue();
+
 
     }
 

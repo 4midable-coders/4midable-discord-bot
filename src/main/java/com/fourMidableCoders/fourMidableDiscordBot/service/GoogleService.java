@@ -16,44 +16,82 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 import java.io.*;
 import java.security.GeneralSecurityException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+
 import java.util.List;
 
-/* class to demonstrate use of Calendar events list API */
+/* The class for the google API */
 public class GoogleService {
+    // enum for the time range
+    public enum TimeRange {
+        TODAY,
+        TOMORROW,
+        WEEK
+    }
 
-
-    // method to get events from calendar as a list of strings
-    public static List<String> getEvents() throws IOException, GeneralSecurityException {
-        // Build a new authorized API client service.
+    // method to get calendar service object. This is used to make API calls to Google Calendar.
+    public static Calendar getCalendarService() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar service =
+        Calendar calendarService =
                 new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                         .setApplicationName(APPLICATION_NAME)
                         .build();
-
-        // List the next 10 events from the primary calendar.
-        DateTime now = new DateTime(System.currentTimeMillis());
-        DateTime timeMax = new DateTime(System.currentTimeMillis() + 604800000);
-        Events events = service.events().list("c_classroomb5302f41@group.calendar.google.com")
+        return calendarService;
+    }
+    // method to get events from calendar as a list of strings
+    public static String getEvents(TimeRange timeRange) throws IOException, GeneralSecurityException {
+        // Build a new authorized API client service.
+        Calendar calendarService = getCalendarService();
+        //Declare timeMin and timeMax variables to set the time range for the events.
+        DateTime timeMin;
+        DateTime timeMax;
+        //Get the current time and format it to the RFC3339 format.
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
+        //Set the time range based on the time range enum.
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+        switch (timeRange) {
+            case TODAY:
+                timeMin = new DateTime(now.toLocalDate().atStartOfDay(now.getZone()).format(formatter));
+                timeMax = new DateTime(now.toLocalDate().plusDays(1).atStartOfDay(now.getZone()).format(formatter));
+                break;
+            case TOMORROW:
+                timeMin = new DateTime(now.toLocalDate().plusDays(1).atStartOfDay(now.getZone()).format(formatter));
+                timeMax = new DateTime(now.toLocalDate().plusDays(2).atStartOfDay(now.getZone()).format(formatter));
+                break;
+            case WEEK:
+                timeMin = new DateTime(now.toLocalDate().atStartOfDay(now.getZone()).format(formatter));
+                timeMax = new DateTime(now.toLocalDate().plusWeeks(1).atStartOfDay(now.getZone()).format(formatter));
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid time range");
+        }
+        // List the events from the primary calendar within the time range.
+        Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
                 .setMaxResults(10)
-                .setTimeMin(now)
+                .setTimeMin(timeMin)
                 .setTimeMax(timeMax)
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
         List<Event> items = events.getItems();
-        List<String> eventList = new ArrayList<String>(List.of());
+        List<String> eventList = new ArrayList<>();
         for (Event event : items) {
-            DateTime start = event.getStart().getDateTime();
-            if (start == null) {
-                start = event.getStart().getDate();
+            String start;
+            if (event.getStart().getDateTime() != null) {
+                start = event.getStart().getDateTime().toStringRfc3339();
+            } else {
+                start = event.getStart().getDate().toStringRfc3339();
             }
-            eventList.add(event.getSummary() + " (" + start.toString() + ")" + "\n");
+            eventList.add(event.getSummary() + " (" + start + ")");
         }
-        return eventList;
+        String formattedEvents = String.join("\n", eventList);
+        return formattedEvents;
     }
+
     /**
      * Application name.
      */
@@ -104,34 +142,4 @@ public class GoogleService {
         return credential;
     }
 
-    public static void main(String... args) throws IOException, GeneralSecurityException {
-        // Build a new authorized API client service.
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar service =
-                new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                        .setApplicationName(APPLICATION_NAME)
-                        .build();
-
-        // List the next 10 events from the primary calendar.
-        DateTime now = new DateTime(System.currentTimeMillis());
-        Events events = service.events().list("c_classroomb5302f41@group.calendar.google.com")
-                .setMaxResults(10)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
-        List<Event> items = events.getItems();
-        if (items.isEmpty()) {
-            System.out.println("No upcoming events found.");
-        } else {
-            System.out.println("Upcoming events");
-            for (Event event : items) {
-                DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    start = event.getStart().getDate();
-                }
-                System.out.printf("%s (%s)\n", event.getSummary(), start);
-            }
-        }
-    }
 }
