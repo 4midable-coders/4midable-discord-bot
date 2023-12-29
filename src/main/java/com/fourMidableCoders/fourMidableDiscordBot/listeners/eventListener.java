@@ -1,6 +1,5 @@
 package com.fourMidableCoders.fourMidableDiscordBot.listeners;
 
-import com.fourMidableCoders.fourMidableDiscordBot.service.GoogleService;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;

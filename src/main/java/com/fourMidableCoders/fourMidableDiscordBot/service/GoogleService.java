@@ -21,17 +21,10 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-
 import java.util.List;
 
 /* The class for the google API */
 public class GoogleService {
-    // enum for the time range
-    public enum TimeRange {
-        TODAY,
-        TOMORROW,
-        WEEK
-    }
 
     // method to get calendar service object. This is used to make API calls to Google Calendar.
     public static Calendar getCalendarService() throws IOException, GeneralSecurityException {
@@ -43,50 +36,28 @@ public class GoogleService {
         return calendarService;
     }
     // method to get events from calendar as a list of strings
-    public static String getEvents(TimeRange timeRange) throws IOException, GeneralSecurityException {
-        // Build a new authorized API client service.
+    public static String getEventsOfTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
         Calendar calendarService = getCalendarService();
-        //Declare timeMin and timeMax variables to set the time range for the events.
-        DateTime timeMin;
-        DateTime timeMax;
-        //Get the current time and format it to the RFC3339 format.
         ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
-        //Set the time range based on the time range enum.
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
-        switch (timeRange) {
-            case TODAY:
-                timeMin = new DateTime(now.toLocalDate().atStartOfDay(now.getZone()).format(formatter));
-                timeMax = new DateTime(now.toLocalDate().plusDays(1).atStartOfDay(now.getZone()).format(formatter));
-                break;
-            case TOMORROW:
-                timeMin = new DateTime(now.toLocalDate().plusDays(1).atStartOfDay(now.getZone()).format(formatter));
-                timeMax = new DateTime(now.toLocalDate().plusDays(2).atStartOfDay(now.getZone()).format(formatter));
-                break;
-            case WEEK:
-                timeMin = new DateTime(now.toLocalDate().atStartOfDay(now.getZone()).format(formatter));
-                timeMax = new DateTime(now.toLocalDate().plusWeeks(1).atStartOfDay(now.getZone()).format(formatter));
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid time range");
-        }
-        // List the events from the primary calendar within the time range.
+        TimeRange timeRange = new TimeRange(now, timeRangeType);
         Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
                 .setMaxResults(10)
-                .setTimeMin(timeMin)
-                .setTimeMax(timeMax)
+                .setTimeMin(new DateTime(timeRange.getStartFormatted()))
+                .setTimeMax(new DateTime(timeRange.getEndFormatted()))
                 .setOrderBy("startTime")
                 .setSingleEvents(true)
                 .execute();
+        // List the events from the primary calendar within the time range.
         List<Event> items = events.getItems();
         List<String> eventList = new ArrayList<>();
         for (Event event : items) {
-            String start;
+            String startDateTime;
             if (event.getStart().getDateTime() != null) {
-                start = event.getStart().getDateTime().toStringRfc3339();
+                startDateTime = event.getStart().getDateTime().toStringRfc3339();
             } else {
-                start = event.getStart().getDate().toStringRfc3339();
+                startDateTime = event.getStart().getDate().toStringRfc3339();
             }
-            eventList.add(event.getSummary() + " (" + start + ")");
+            eventList.add(event.getSummary() + " (" + startDateTime + ")");
         }
         String formattedEvents = String.join("\n", eventList);
         return formattedEvents;
