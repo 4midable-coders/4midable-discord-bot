@@ -17,7 +17,7 @@ public class commandManager extends ListenerAdapter {
 
     static void sendCalendarAsMessage(SlashCommandInteractionEvent event, TimeRange.TimeRangeType timeRange) {
         try {
-            event.reply(GoogleService.getEventsOfTimeRange(timeRange).toString()).queue();
+            event.reply(GoogleService.getEventsOfTimeRange(timeRange)).queue();
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -18,22 +18,19 @@ import java.io.*;
 import java.security.GeneralSecurityException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/* The class for the google API */
+/* The class for the Google API */
 public class GoogleService {
 
     // method to get calendar service object. This is used to make API calls to Google Calendar.
     public static Calendar getCalendarService() throws IOException, GeneralSecurityException {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        Calendar calendarService =
-                new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                        .setApplicationName(APPLICATION_NAME)
-                        .build();
-        return calendarService;
+        return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
     }
     // method to get events from calendar as a list of strings
     public static String getEventsOfTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
@@ -50,17 +47,19 @@ public class GoogleService {
         // List the events from the primary calendar within the time range.
         List<Event> items = events.getItems();
         List<String> eventList = new ArrayList<>();
+        String calendarEmoji = "\uD83D\uDCC5";
+        String clockEmoji = "\uD83D\uDD52";
         for (Event event : items) {
             String startDateTime;
             if (event.getStart().getDateTime() != null) {
-                startDateTime = event.getStart().getDateTime().toStringRfc3339();
+                startDateTime = calendarEmoji + " " + event.getStart().getDateTime().toString().substring(0,10) + "  " + clockEmoji + event.getStart().getDateTime().toString().substring(11,16);
             } else {
-                startDateTime = event.getStart().getDate().toStringRfc3339();
+                //skip all-day events
+                continue;
             }
-            eventList.add(event.getSummary() + " (" + startDateTime + ")");
+            eventList.add(" " + startDateTime + "   [" + event.getSummary() + "]");
         }
-        String formattedEvents = String.join("\n", eventList);
-        return formattedEvents;
+        return String.join("\n", eventList);
     }
 
     /**
@@ -82,7 +81,7 @@ public class GoogleService {
      */
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
-    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "/Users/peterliebhart/Desktop/Private Projects/4midable-discord-bot/credentials.json";
 
     /**
      * Creates an authorized Credential object.
@@ -94,10 +93,7 @@ public class GoogleService {
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
         // Load client secrets.
-        InputStream in = new FileInputStream("/Users/peterliebhart/Desktop/Private Projects/4midable-discord-bot/credentials.json");
-        if (in == null) {
-            throw new FileNotFoundException(CREDENTIALS_FILE_PATH);
-        }
+        InputStream in = new FileInputStream(CREDENTIALS_FILE_PATH);
         GoogleClientSecrets clientSecrets =
                 GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
@@ -108,9 +104,8 @@ public class GoogleService {
                 .setAccessType("offline")
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
-        Credential credential = new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
         //returns an authorized Credential object.
-        return credential;
+        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
 }

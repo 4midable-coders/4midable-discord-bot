@@ -8,6 +8,7 @@ config.properties
 .idea/
 credentials.json
 tokens/
+tests/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
