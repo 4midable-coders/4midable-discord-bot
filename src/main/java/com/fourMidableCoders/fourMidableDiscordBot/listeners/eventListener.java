@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.entities.channel.unions.DefaultGuildChannelUnion;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+
+//This class contains the event listeners, which are used to react to certain events. Slash command events are handled in the commandManager class.
 public class eventListener extends ListenerAdapter {
 
 

@@ -49,8 +49,10 @@ public class GoogleService {
         List<String> eventList = new ArrayList<>();
         String calendarEmoji = "\uD83D\uDCC5";
         String clockEmoji = "\uD83D\uDD52";
+        //loop through all events and add them to the eventList as long as they are not all-day events
         for (Event event : items) {
             String startDateTime;
+            //check if the event is an all-day event or not
             if (event.getStart().getDateTime() != null) {
                 startDateTime = calendarEmoji + " " + event.getStart().getDateTime().toString().substring(0,10) + "  " + clockEmoji + event.getStart().getDateTime().toString().substring(11,16);
             } else {
@@ -65,22 +67,28 @@ public class GoogleService {
     /**
      * Application name.
      */
+    //Saves the application name in a variable so it can easily be reused and changed.
     private static final String APPLICATION_NAME = "4midable-discord-bot";
     /**
      * Global instance of the JSON factory.
      */
+    //This is used in reading the credentials.json file.
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     /**
      * Directory to store authorization tokens for this application.
      */
+    //this is the directory where the token is stored. It is used to prevent the user from having to authorize the bot every time it is started.
+    //do not upload the token to github. It contains sensitive information.
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
 
     /**
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
+    //This is the scope of the Google Calendar API. It is used to determine what the bot can do with the API. In this case, it can only read the calendar.
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
+    //This is the path to the credentials.json file. It is used to authorize the bot with the Google Calendar API.
     private static final String CREDENTIALS_FILE_PATH = "/Users/peterliebhart/Desktop/Private Projects/4midable-discord-bot/credentials.json";
 
     /**
@@ -90,6 +98,7 @@ public class GoogleService {
      * @return An authorized Credential object.
      * @throws IOException If the credentials.json file cannot be found.
      */
+    //This method is used to authorize the bot with the Google Calendar API. It is called in the getCalendarService method.
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {
         // Load client secrets.

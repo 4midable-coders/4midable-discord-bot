@@ -4,20 +4,33 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+
+//This class is used to calculate the time range for the calendar events.
 public class TimeRange {
+
+    //This enum is used to determine the time range.
+    //Using an enum makes it easier to add more time ranges later on, and ensures that only valid time ranges can be used.
     public enum TimeRangeType {
         TODAY,
         TOMORROW,
         WEEK
     }
+    //The start and end of the time range.
     private ZonedDateTime start;
     private ZonedDateTime end;
+
+    //The DateTimeFormatter is used to format the start and end of the time range. This is needed for the Google Calendar API to work properly.
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
 
+
+    //The constructor of the class. It takes the current time and the time range type as parameters.
     public TimeRange(ZonedDateTime now, TimeRangeType rangeType) {
         calculateRange(now, rangeType);
     }
 
+
+    //This method calculates the start and end of the time range based on the current time and the time range type.
+    //It is called in the constructor.
     private void calculateRange(ZonedDateTime now, TimeRangeType rangeType) {
         switch (rangeType) {
             case TODAY:
@@ -45,6 +58,7 @@ public class TimeRange {
         return end;
     }
 
+    //These methods return the start and end of the time range as a formatted string. This is needed for the Google Calendar API to work properly.
     public String getStartFormatted() {
         return start.format(formatter);
     }

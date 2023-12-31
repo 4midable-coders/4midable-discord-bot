@@ -1,5 +1,6 @@
 package com.fourMidableCoders.fourMidableDiscordBot.slashCommands;
 import com.fourMidableCoders.fourMidableDiscordBot.service.GoogleService;
+import com.fourMidableCoders.fourMidableDiscordBot.service.JokeService;
 import com.fourMidableCoders.fourMidableDiscordBot.service.TimeRange;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -15,6 +16,8 @@ import java.util.List;
 //This class handles the slash commands.
 public class commandManager extends ListenerAdapter {
 
+
+    //This method sends the calendar entries of a certain TimeRange as a message to the channel where the slash command was used.
     static void sendCalendarAsMessage(SlashCommandInteractionEvent event, TimeRange.TimeRangeType timeRange) {
         try {
             event.reply(GoogleService.getEventsOfTimeRange(timeRange)).queue();
@@ -45,18 +48,19 @@ public class commandManager extends ListenerAdapter {
         //Check if the command is "joke". If it is, send a joke.
         switch (command) {
             case "joke": {
-                event.reply("How many " + user + "s do you need to change a lightbulb? Five. One to hold the lightbulb and four to turn the ladder.").queue();
+                event.reply(JokeService.getJoke()).queue();
                 break;
             }
-            //Check if the command is "calendar". If it is, send the upcoming calendar entries using the getEvents method from the GoogleService class.
+            //Check if the command is "calendartoday". If it is, send the calendar entries for today.
             case "calendartoday": {
                 sendCalendarAsMessage(event, TimeRange.TimeRangeType.TODAY);
                 break;
-            }
+            }//Check if the command is "calendartomorrow". If it is, send the calendar entries for tomorrow.
             case "calendartomorrow": {
                 sendCalendarAsMessage(event, TimeRange.TimeRangeType.TOMORROW);
                 break;
             }
+            //Check if the command is "calendarweek". If it is, send the calendar entries for the week.
             case "calendarweek": {
                 sendCalendarAsMessage(event, TimeRange.TimeRangeType.WEEK);
                 break;
