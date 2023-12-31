@@ -15,6 +15,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
@@ -48,6 +49,12 @@ public class GoogleService {
                 .setSingleEvents(true)
                 .execute();
         // List the events from the primary calendar within the time range.
+        List<String> eventList = getEventList(events);
+        return String.join("\n", eventList);
+    }
+
+    @NotNull
+    private static List<String> getEventList(Events events) {
         List<Event> items = events.getItems();
         List<String> eventList = new ArrayList<>();
         String calendarEmoji = "\uD83D\uDCC5";
@@ -64,7 +71,7 @@ public class GoogleService {
             }
             eventList.add(" " + startDateTime + "   [" + event.getSummary() + "]");
         }
-        return String.join("\n", eventList);
+        return eventList;
     }
 
     /**
