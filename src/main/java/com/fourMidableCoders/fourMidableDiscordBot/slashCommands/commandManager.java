@@ -1,4 +1,5 @@
 package com.fourMidableCoders.fourMidableDiscordBot.slashCommands;
+
 import com.fourMidableCoders.fourMidableDiscordBot.service.GoogleService;
 import com.fourMidableCoders.fourMidableDiscordBot.service.JokeService;
 import com.fourMidableCoders.fourMidableDiscordBot.service.TimeRange;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class commandManager extends ListenerAdapter {
             e.printStackTrace();
         }
     }
+
     //This method is called when the bot is ready. It adds the slash commands to the server.
     //Without it, slash command would not work at all, regardless of whether they are defined in onSlashCommandInteraction.
     @Override

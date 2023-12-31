@@ -1,4 +1,5 @@
 package com.fourMidableCoders.fourMidableDiscordBot.service;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -14,6 +15,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
+
 import java.io.*;
 import java.security.GeneralSecurityException;
 import java.time.ZoneId;
@@ -32,6 +34,7 @@ public class GoogleService {
                 .setApplicationName(APPLICATION_NAME)
                 .build();
     }
+
     // method to get events from calendar as a list of strings
     public static String getEventsOfTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
         Calendar calendarService = getCalendarService();
@@ -54,7 +57,7 @@ public class GoogleService {
             String startDateTime;
             //check if the event is an all-day event or not
             if (event.getStart().getDateTime() != null) {
-                startDateTime = calendarEmoji + " " + event.getStart().getDateTime().toString().substring(0,10) + "  " + clockEmoji + event.getStart().getDateTime().toString().substring(11,16);
+                startDateTime = calendarEmoji + " " + event.getStart().getDateTime().toString().substring(0, 10) + "  " + clockEmoji + event.getStart().getDateTime().toString().substring(11, 16);
             } else {
                 //skip all-day events
                 continue;

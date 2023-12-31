@@ -15,6 +15,7 @@ public class TimeRange {
         TOMORROW,
         WEEK
     }
+
     //The start and end of the time range.
     private ZonedDateTime start;
     private ZonedDateTime end;
