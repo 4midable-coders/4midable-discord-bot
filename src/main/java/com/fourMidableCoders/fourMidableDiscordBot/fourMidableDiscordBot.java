@@ -15,7 +15,7 @@ import javax.security.auth.login.LoginException;
 import java.util.Properties;
 
 //This class starts the bot and sets the status and the activity of the bot.
-//Consider it as the main class of the bot.
+//Consider it the main class of the bot.
 public class fourMidableDiscordBot {
 
     private final ShardManager shardManager;

@@ -68,7 +68,7 @@ public class commandManager extends ListenerAdapter {
             case "calendarweek": {
                 sendCalendarAsMessage(event, TimeRange.TimeRangeType.WEEK);
                 break;
-                }
+            }
             case "evaluations": {
                 event.reply(GoogleService.getEventsByName("Evaluation Week")).queue();
                 break;

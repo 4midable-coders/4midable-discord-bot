@@ -19,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,12 +27,11 @@ import java.util.List;
 public class GoogleService {
 
     // method to get calendar service object. This is used to make API calls to Google Calendar.
-    public static Calendar getCalendarService(){
-        try {final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
-                .setApplicationName(APPLICATION_NAME)
-                .build();}
-        catch (IOException | GeneralSecurityException e) {
+    public static Calendar getCalendarService() {
+        try {
+            final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT)).setApplicationName(APPLICATION_NAME).build();
+        } catch (IOException | GeneralSecurityException e) {
             e.printStackTrace();
             return null;
         }
@@ -44,12 +41,7 @@ public class GoogleService {
     public static String getEventsByTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
         Calendar calendarService = getCalendarService();
         TimeRange timeRange = new TimeRange(timeRangeType);
-        Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
-                .setTimeMin(new DateTime(timeRange.getStartFormatted()))
-                .setTimeMax(new DateTime(timeRange.getEndFormatted()))
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute();
+        Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com").setTimeMin(new DateTime(timeRange.getStartFormatted())).setTimeMax(new DateTime(timeRange.getEndFormatted())).setOrderBy("startTime").setSingleEvents(true).execute();
         // List the events from the primary calendar within the time range.
         List<String> eventList = getEventList(events);
         return String.join("\n", eventList);
@@ -75,18 +67,13 @@ public class GoogleService {
         }
         return eventList;
     }
+
     public static String getEventsByName(String eventName) {
         try {
             Calendar calendarService = getCalendarService();
             TimeRange timeRange = new TimeRange(TimeRange.TimeRangeType.YEAR);
             String calendarEmoji = "\uD83D\uDCC5";
-            Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
-                    .setMaxResults(1000000)
-                    .setTimeMin(new DateTime(timeRange.getStartFormatted()))
-                    .setTimeMax(new DateTime(timeRange.getEndFormatted()))
-                    .setOrderBy("startTime")
-                    .setSingleEvents(true)
-                    .execute();
+            Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com").setMaxResults(1000000).setTimeMin(new DateTime(timeRange.getStartFormatted())).setTimeMax(new DateTime(timeRange.getEndFormatted())).setOrderBy("startTime").setSingleEvents(true).execute();
 
             List<String> matchingEvents = new ArrayList<>();
             for (Event event : events.getItems()) {
@@ -101,7 +88,6 @@ public class GoogleService {
             return null;
         }
     }
-
 
 
     /**

@@ -18,13 +18,7 @@ public class JokeService {
         JokeApi jokeApi = new JokeApi();
 
         // Forming filter:
-        JokeFilter filter = new JokeFilter.Builder()
-                .category(Category.Any)
-                .blacklistFlags(Set.of(Flag.nsfw, Flag.racist, Flag.sexist, Flag.explicit))
-                .lang(Lang.en)
-                .idRange(0, 305)
-                .type(Type.twopart)
-                .build();
+        JokeFilter filter = new JokeFilter.Builder().category(Category.Any).blacklistFlags(Set.of(Flag.nsfw, Flag.racist, Flag.sexist, Flag.explicit)).lang(Lang.en).idRange(0, 305).type(Type.twopart).build();
 
         // Requesting joke(s):
         Joke joke = jokeApi.getJoke(filter);

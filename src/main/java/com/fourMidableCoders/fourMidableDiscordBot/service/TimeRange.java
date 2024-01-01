@@ -12,10 +12,7 @@ public class TimeRange {
     //This enum is used to determine the time range.
     //Using an enum makes it easier to add more time ranges later on, and ensures that only valid time ranges can be used.
     public enum TimeRangeType {
-        TODAY,
-        TOMORROW,
-        WEEK,
-        YEAR
+        TODAY, TOMORROW, WEEK, YEAR
     }
 
     //The start and end of the time range.
