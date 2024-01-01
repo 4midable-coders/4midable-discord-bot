@@ -1,5 +1,6 @@
 package com.fourMidableCoders.fourMidableDiscordBot.service;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +14,8 @@ public class TimeRange {
     public enum TimeRangeType {
         TODAY,
         TOMORROW,
-        WEEK
+        WEEK,
+        YEAR
     }
 
     //The start and end of the time range.
@@ -24,15 +26,9 @@ public class TimeRange {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
 
 
-    //The constructor of the class. It takes the current time and the time range type as parameters.
-    public TimeRange(ZonedDateTime now, TimeRangeType rangeType) {
-        calculateRange(now, rangeType);
-    }
-
-
-    //This method calculates the start and end of the time range based on the current time and the time range type.
-    //It is called in the constructor.
-    private void calculateRange(ZonedDateTime now, TimeRangeType rangeType) {
+    //The constructor of the class. It takes the time range type as a parameter. Refer to the TimeRange enum for the possible time range types.
+    public TimeRange(TimeRangeType rangeType) {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
         switch (rangeType) {
             case TODAY:
                 this.start = now.truncatedTo(ChronoUnit.DAYS);
@@ -45,6 +41,10 @@ public class TimeRange {
             case WEEK:
                 this.start = now.truncatedTo(ChronoUnit.DAYS);
                 this.end = this.start.plusWeeks(1);
+                break;
+            case YEAR:
+                this.start = now.truncatedTo(ChronoUnit.DAYS);
+                this.end = this.start.plusYears(1);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid time range type");

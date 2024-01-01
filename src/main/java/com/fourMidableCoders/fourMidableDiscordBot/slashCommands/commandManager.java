@@ -22,7 +22,7 @@ public class commandManager extends ListenerAdapter {
     //This method sends the calendar entries of a certain TimeRange as a message to the channel where the slash command was used.
     static void sendCalendarAsMessage(SlashCommandInteractionEvent event, TimeRange.TimeRangeType timeRange) {
         try {
-            event.reply(GoogleService.getEventsOfTimeRange(timeRange)).queue();
+            event.reply(GoogleService.getEventsByTimeRange(timeRange)).queue();
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -39,6 +39,7 @@ public class commandManager extends ListenerAdapter {
         commandDataList.add(Commands.slash("calendartoday", "Displays the google calendar entries for today"));
         commandDataList.add(Commands.slash("calendartomorrow", "Displays the google calendar entries for tomorrow"));
         commandDataList.add(Commands.slash("calendarweek", "Displays the google calendar entries for the week"));
+        commandDataList.add(Commands.slash("evaluations", "Displays the google calendar entries of the evaluation days"));
         event.getGuild().updateCommands().addCommands(commandDataList).queue();
     }
 
@@ -66,6 +67,10 @@ public class commandManager extends ListenerAdapter {
             //Check if the command is "calendarweek". If it is, send the calendar entries for the week.
             case "calendarweek": {
                 sendCalendarAsMessage(event, TimeRange.TimeRangeType.WEEK);
+                break;
+                }
+            case "evaluations": {
+                event.reply(GoogleService.getEventsByName("Evaluation Week")).queue();
                 break;
             }
         }

@@ -29,20 +29,22 @@ import java.util.List;
 public class GoogleService {
 
     // method to get calendar service object. This is used to make API calls to Google Calendar.
-    public static Calendar getCalendarService() throws IOException, GeneralSecurityException {
-        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+    public static Calendar getCalendarService(){
+        try {final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         return new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
-                .build();
+                .build();}
+        catch (IOException | GeneralSecurityException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // method to get events from calendar as a list of strings
-    public static String getEventsOfTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
+    public static String getEventsByTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
         Calendar calendarService = getCalendarService();
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
-        TimeRange timeRange = new TimeRange(now, timeRangeType);
+        TimeRange timeRange = new TimeRange(timeRangeType);
         Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
-                .setMaxResults(10)
                 .setTimeMin(new DateTime(timeRange.getStartFormatted()))
                 .setTimeMax(new DateTime(timeRange.getEndFormatted()))
                 .setOrderBy("startTime")
@@ -73,6 +75,34 @@ public class GoogleService {
         }
         return eventList;
     }
+    public static String getEventsByName(String eventName) {
+        try {
+            Calendar calendarService = getCalendarService();
+            TimeRange timeRange = new TimeRange(TimeRange.TimeRangeType.YEAR);
+            String calendarEmoji = "\uD83D\uDCC5";
+            Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
+                    .setMaxResults(1000000)
+                    .setTimeMin(new DateTime(timeRange.getStartFormatted()))
+                    .setTimeMax(new DateTime(timeRange.getEndFormatted()))
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+
+            List<String> matchingEvents = new ArrayList<>();
+            for (Event event : events.getItems()) {
+                if (event.getSummary() != null && event.getSummary().contains(eventName)) {
+                    String startDate = event.getStart().getDate().toString();
+                    matchingEvents.add(calendarEmoji + " " + startDate + " - " + event.getSummary());
+                }
+            }
+            return matchingEvents.isEmpty() ? "No matching all-day events found." : String.join("\n", matchingEvents);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
     /**
      * Application name.
@@ -128,3 +158,4 @@ public class GoogleService {
     }
 
 }
+
