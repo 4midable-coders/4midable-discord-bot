@@ -63,7 +63,7 @@ public class GoogleService {
                 //skip all-day events
                 continue;
             }
-            eventList.add(" " + startDateTime + "   [" + event.getSummary() + "]");
+            eventList.add(startDateTime + "   [" + event.getSummary() + "]");
         }
         return eventList;
     }
@@ -115,7 +115,7 @@ public class GoogleService {
     private static final List<String> SCOPES =
             Collections.singletonList(CalendarScopes.CALENDAR_READONLY);
     //This is the path to the credentials.json file. It is used to authorize the bot with the Google Calendar API.
-    private static final String CREDENTIALS_FILE_PATH = "/Users/peterliebhart/Desktop/Private Projects/4midable-discord-bot/credentials.json";
+    private static final String CREDENTIALS_FILE_PATH = "/Users/peterliebhart/Desktop/PrivateProjects/4midable-discord-bot/credentials.json";
 
     /**
      * Creates an authorized Credential object.

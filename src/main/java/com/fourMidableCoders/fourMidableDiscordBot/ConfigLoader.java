@@ -12,7 +12,7 @@ public class ConfigLoader {
         //Load the config.properties file as prop object.
         Properties prop = new Properties();
         //Try to load the config.properties file. If it fails, print the stacktrace.
-        try (InputStream input = new FileInputStream("/Users/peterliebhart/Desktop/Private Projects/4midable-discord-bot/config.properties")) {
+        try (InputStream input = new FileInputStream("/Users/peterliebhart/Desktop/PrivateProjects/4midable-discord-bot/config.properties")) {
             prop.load(input);
         } catch (IOException ex) {
             ex.printStackTrace();
