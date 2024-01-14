@@ -12,7 +12,7 @@ public class TimeRange {
     //This enum is used to determine the time range.
     //Using an enum makes it easier to add more time ranges later on, and ensures that only valid time ranges can be used.
     public enum TimeRangeType {
-        TODAY, TOMORROW, WEEK, YEAR
+        TODAY, TOMORROW, WEEK, MONTH, YEAR
     }
 
     //The start and end of the time range.
@@ -43,6 +43,9 @@ public class TimeRange {
                 this.start = now.truncatedTo(ChronoUnit.DAYS);
                 this.end = this.start.plusYears(1);
                 break;
+            case MONTH:
+                this.start = now.truncatedTo(ChronoUnit.DAYS);
+                this.end = this.start.plusMonths(1);
             default:
                 throw new IllegalArgumentException("Invalid time range type");
         }

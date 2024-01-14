@@ -142,6 +142,5 @@ public class GoogleService {
         //returns an authorized Credential object.
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
-
 }
 

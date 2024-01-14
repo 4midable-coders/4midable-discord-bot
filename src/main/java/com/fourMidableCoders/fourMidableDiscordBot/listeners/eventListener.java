@@ -20,15 +20,10 @@ public class eventListener extends ListenerAdapter {
         Channel channel = event.getChannel();
         //Get the channel as a mention so it can be mentioned in the message.
         String channelMention = channel.getAsMention();
-
         //Create the message and send it to the default channel of the guild.
         String message = "**" + user.getAsMention() + "**" + " reacted to a message with " + reaction + " in " + channelMention + "!";
         DefaultGuildChannelUnion defaultchan = event.getGuild().getDefaultChannel();
         //.queue() is needed for every action that is done with the JDA API. It queues the action and executes it when the JDA API is ready.
         defaultchan.asTextChannel().sendMessage(message).queue();
-
-
     }
-
-
 }
