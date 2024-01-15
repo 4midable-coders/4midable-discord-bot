@@ -26,6 +26,9 @@ import java.util.List;
 /* The class for the Google API */
 public class GoogleService {
 
+    static String calendarEmoji = "\uD83D\uDCC5";
+    static String clockEmoji = "\uD83D\uDD52";
+
     // method to get calendar service object. This is used to make API calls to Google Calendar.
     public static Calendar getCalendarService() {
         try {
@@ -51,8 +54,6 @@ public class GoogleService {
     private static List<String> getEventList(Events events) {
         List<Event> items = events.getItems();
         List<String> eventList = new ArrayList<>();
-        String calendarEmoji = "\uD83D\uDCC5";
-        String clockEmoji = "\uD83D\uDD52";
         //loop through all events and add them to the eventList as long as they are not all-day events
         for (Event event : items) {
             String startDateTime;
@@ -72,8 +73,12 @@ public class GoogleService {
         try {
             Calendar calendarService = getCalendarService();
             TimeRange timeRange = new TimeRange(TimeRange.TimeRangeType.YEAR);
-            String calendarEmoji = "\uD83D\uDCC5";
-            Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com").setMaxResults(1000000).setTimeMin(new DateTime(timeRange.getStartFormatted())).setTimeMax(new DateTime(timeRange.getEndFormatted())).setOrderBy("startTime").setSingleEvents(true).execute();
+            Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
+                    .setMaxResults(1000000)
+                    .setTimeMin(new DateTime(timeRange.getStartFormatted()))
+                    .setTimeMax(new DateTime(timeRange.getEndFormatted()))
+                    .setOrderBy("startTime").setSingleEvents(true)
+                    .execute();
 
             List<String> matchingEvents = new ArrayList<>();
             for (Event event : events.getItems()) {

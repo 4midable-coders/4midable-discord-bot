@@ -39,7 +39,6 @@ public class commandManager extends ListenerAdapter {
         commandDataList.add(Commands.slash("calendartoday", "Displays the google calendar entries for today"));
         commandDataList.add(Commands.slash("calendartomorrow", "Displays the google calendar entries for tomorrow"));
         commandDataList.add(Commands.slash("calendarweek", "Displays the google calendar entries for the next 7 days"));
-        commandDataList.add(Commands.slash("calendarmonth", "Displays the google calendar entries for the next 30 days"));
         commandDataList.add(Commands.slash("evaluations", "Displays the google calendar entries of the evaluation days"));
         commandDataList.add(Commands.slash("help", "Requests help from the bot"));
         event.getGuild().updateCommands().addCommands(commandDataList).queue();

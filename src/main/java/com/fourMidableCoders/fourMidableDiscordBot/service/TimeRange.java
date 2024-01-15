@@ -25,27 +25,29 @@ public class TimeRange {
 
     //The constructor of the class. It takes the time range type as a parameter. Refer to the TimeRange enum for the possible time range types.
     public TimeRange(TimeRangeType rangeType) {
+        //Coordinated Universal Time (UTC) is used as the time zone for the time range.
         ZonedDateTime now = ZonedDateTime.now(ZoneId.systemDefault());
         switch (rangeType) {
             case TODAY:
-                this.start = now.truncatedTo(ChronoUnit.DAYS);
+                this.start = now;
                 this.end = this.start.plusDays(1);
                 break;
             case TOMORROW:
-                this.start = now.truncatedTo(ChronoUnit.DAYS).plusDays(1);
+                this.start = now.plusDays(1);
                 this.end = this.start.plusDays(1);
                 break;
             case WEEK:
-                this.start = now.truncatedTo(ChronoUnit.DAYS);
+                this.start = now;
                 this.end = this.start.plusWeeks(1);
                 break;
             case YEAR:
-                this.start = now.truncatedTo(ChronoUnit.DAYS);
+                this.start = now;
                 this.end = this.start.plusYears(1);
                 break;
             case MONTH:
-                this.start = now.truncatedTo(ChronoUnit.DAYS);
+                this.start = now;
                 this.end = this.start.plusMonths(1);
+                break;
             default:
                 throw new IllegalArgumentException("Invalid time range type");
         }
