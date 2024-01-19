@@ -19,6 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,14 +58,15 @@ public class GoogleService {
     private static List<String> getEventList(Events events) {
         List<Event> items = events.getItems();
         List<String> eventList = new ArrayList<>();
-        //loop through all events and add them to the eventList as long as they are not all-day events
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZoneId.of("Europe/Vienna")); // replace with your timezone
+
         for (Event event : items) {
             String startDateTime;
-            //check if the event is an all-day event or not
             if (event.getStart().getDateTime() != null) {
-                startDateTime = calendarEmoji + " " + event.getStart().getDateTime().toString().substring(0, 10) + "  " + clockEmoji + event.getStart().getDateTime().toString().substring(11, 16);
+                Instant instant = Instant.ofEpochMilli(event.getStart().getDateTime().getValue());
+                ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, ZoneId.of("Europe/Vienna")); // replace with your timezone
+                startDateTime = calendarEmoji + " " + formatter.format(zonedDateTime);
             } else {
-                //skip all-day events
                 continue;
             }
             eventList.add(startDateTime + "   [" + event.getSummary() + "]");
