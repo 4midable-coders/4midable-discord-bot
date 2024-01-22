@@ -49,7 +49,6 @@ public class commandManager extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         String command = event.getName();
-        String user = event.getUser().getAsMention();
         //Check if the command is "joke". If it is, send a joke.
         switch (command) {
             case "joke": {

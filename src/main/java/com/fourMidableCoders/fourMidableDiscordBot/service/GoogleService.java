@@ -79,7 +79,6 @@ public class GoogleService {
             Calendar calendarService = getCalendarService();
             TimeRange timeRange = new TimeRange(TimeRange.TimeRangeType.YEAR);
             Events events = calendarService.events().list("c_classroomb5302f41@group.calendar.google.com")
-                    .setMaxResults(1000000)
                     .setTimeMin(new DateTime(timeRange.getStartFormatted()))
                     .setTimeMax(new DateTime(timeRange.getEndFormatted()))
                     .setOrderBy("startTime").setSingleEvents(true)

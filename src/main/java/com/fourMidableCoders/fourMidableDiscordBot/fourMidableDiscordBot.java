@@ -21,7 +21,7 @@ public class fourMidableDiscordBot {
     private final ShardManager shardManager;
 
     //The constructor of the class.
-    public fourMidableDiscordBot() throws LoginException {
+    public fourMidableDiscordBot() throws LoginException{
         //Load the config.properties file as prop object.
         Properties prop = ConfigLoader.loadProperties();
         //Get the token from the prop object.
@@ -44,11 +44,6 @@ public class fourMidableDiscordBot {
 
         //add custom event listeners to the shardManager object. The event listeners are located in the listeners package. You can add as many event listeners as you want.
         shardManager.addEventListener(new eventListener(), new commandManager());
-    }
-
-    //This is just a getter for the shardManager object. It is used in the eventListener class.
-    public ShardManager getShardManager() {
-        return shardManager;
     }
 
     //This method starts the bot and handles the LoginException if needed.
