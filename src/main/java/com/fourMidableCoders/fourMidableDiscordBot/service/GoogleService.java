@@ -43,7 +43,6 @@ public class GoogleService {
             return null;
         }
     }
-
     // method to get events from calendar as a list of strings
     public static String getEventsByTimeRange(TimeRange.TimeRangeType timeRangeType) throws IOException, GeneralSecurityException {
         Calendar calendarService = getCalendarService();
@@ -53,7 +52,6 @@ public class GoogleService {
         List<String> eventList = getEventList(events);
         return String.join("\n", eventList);
     }
-
     @NotNull
     private static List<String> getEventList(Events events) {
         List<Event> items = events.getItems();
@@ -73,7 +71,6 @@ public class GoogleService {
         }
         return eventList;
     }
-
     public static String getEventsByName(String eventName) {
         try {
             Calendar calendarService = getCalendarService();
@@ -97,8 +94,6 @@ public class GoogleService {
             return null;
         }
     }
-
-
     /**
      * Application name.
      */
